@@ -37,6 +37,10 @@ elsif File.exists?("/etc/enterprise-release")
   contents = File.read("/etc/enterprise-release").chomp
   platform "oracle"
   platform_version get_redhatish_version(contents)
+elsif File.exists?('/etc/SuSE-release')
+  platform "suse"
+  platform_version File.read("/etc/SuSE-release").scan(/VERSION = (\d+)\nPATCHLEVEL = (\d+)/).flatten.join(".")
+  platform_version File.read("/etc/SuSE-release").scan(/VERSION = ([\d\.]{2,})/).flatten.join(".") if platform_version == ""
 elsif lsb[:id] =~ /RedHat/i
   platform "redhat"
   platform_version lsb[:release]
@@ -63,10 +67,6 @@ elsif File.exists?("/etc/system-release")
 elsif File.exists?('/etc/gentoo-release')
   platform "gentoo"
   platform_version File.read('/etc/gentoo-release').scan(/(\d+|\.+)/).join
-elsif File.exists?('/etc/SuSE-release')
-  platform "suse"
-  platform_version File.read("/etc/SuSE-release").scan(/VERSION = (\d+)\nPATCHLEVEL = (\d+)/).flatten.join(".")
-  platform_version File.read("/etc/SuSE-release").scan(/VERSION = ([\d\.]{2,})/).flatten.join(".") if platform_version == ""
 elsif File.exists?('/etc/slackware-version')
   platform "slackware"
   platform_version File.read("/etc/slackware-version").scan(/(\d+|\.+)/).join

@@ -30,16 +30,7 @@ require_plugin 'linux::lsb'
   
 # platform [ and platform_version ? ] should be lower case to avoid dealing with RedHat/Redhat/redhat matching
 
-if lsb[:id] =~ /RedHat/i
-  platform "redhat"
-  platform_version lsb[:release]
-elsif lsb[:id] =~ /Amazon/i
- platform "amazon"
- platform_version lsb[:release]
-elsif lsb[:id]	
-  platform lsb[:id].downcase
-  platform_version lsb[:release]
-elsif File.exists?("/etc/debian_version")
+if File.exists?("/etc/debian_version")
   platform "debian"
   platform_version File.read("/etc/debian_version").chomp
 elsif File.exists?("/etc/redhat-release")
@@ -64,4 +55,13 @@ elsif File.exists?('/etc/arch-release')
   platform "arch"
   # no way to determine platform_version in a rolling release distribution
   # kernel release will be used - ex. 2.6.32-ARCH
+elsif lsb[:id] =~ /RedHat/i
+  platform "redhat"
+  platform_version lsb[:release]
+elsif lsb[:id] =~ /Amazon/i
+ platform "amazon"
+ platform_version lsb[:release]
+elsif lsb[:id]	
+  platform lsb[:id].downcase
+  platform_version lsb[:release]
 end

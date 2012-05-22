@@ -205,10 +205,28 @@ describe Ohai::System, "Linux plugin platform" do
   end
 
   describe "on suse" do
+    before(:each) do
+      File.should_receive(:exists?).with("/etc/SuSE-release").and_return(true)
+    end
+      
+    describe "with lsb_release results" do
+      before(:each) do
+        @ohai[:lsb][:id] = "SUSE LINUX"
+      end
+      
+      it "should read the platform as suse" do
+        @ohai[:lsb][:release] = "12.1"
+        File.should_receive(:read).with("/etc/SuSE-release").exactly(2).times.and_return("openSUSE 12.1 (x86_64)\nVERSION = 12.1\nCODENAME = Asparagus\n")
+        @ohai._require_plugin("linux::platform")
+        @ohai[:platform].should == "suse"
+        @ohai[:platform_version].should == "12.1"
+        @ohai[:platform_family].should == "suse"
+      end
+    end
+
     describe "without lsb_release results" do
       before(:each) do
         @ohai.lsb = nil
-        File.should_receive(:exists?).with("/etc/SuSE-release").and_return(true)
       end
       
       it "should check for the existance of SuSE-release" do

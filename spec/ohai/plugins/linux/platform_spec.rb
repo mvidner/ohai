@@ -220,7 +220,6 @@ describe Ohai::System, "Linux plugin platform" do
         @ohai._require_plugin("linux::platform")
         @ohai[:platform].should == "suse"
         @ohai[:platform_version].should == "12.1"
-        @ohai[:platform_family].should == "suse"
       end
     end
 
